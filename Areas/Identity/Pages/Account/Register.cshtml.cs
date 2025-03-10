@@ -31,19 +31,20 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly GreensAndSipsContext _db; // Database context
 
-        //Creating variable for the context,CheckoutCustomer and the Basket
-        private GreensAndSipsContext _db;
+        // Creating instances for CheckoutCustomer and Basket
         public CheckoutCustomer Customer = new CheckoutCustomer();
         public Basket Basket = new Basket();
 
+        // Constructor initializing dependencies
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-        GreensAndSipsContext db)
+            GreensAndSipsContext db)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -54,75 +55,51 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
             _db = db;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } // Holds user input for registration
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } // Stores the return URL after registration
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; } // Stores external authentication providers
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Model to capture user registration details
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            public string Email { get; set; }
+            public string Email { get; set; } // User email
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
-            public string Password { get; set; }
+            public string Password { get; set; } // User password
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
+            public string ConfirmPassword { get; set; } // Confirm password field
         }
 
-
+        // Handles GET request to display the registration page
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+        // Handles POST request for user registration
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
+                // Set user details
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -131,6 +108,7 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // Generate email confirmation token
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -140,6 +118,7 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
+                    // Send confirmation email
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
@@ -151,22 +130,25 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
-                        //calling the methods to create basket and customer records
+                        // Create a new basket and customer record for the registered user
                         NewBasket();
                         NewCustomer(Input.Email);
                         return LocalRedirect(returnUrl);
                     }
                 }
+
+                // Handle errors and display them
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            // If we got this far, something failed, redisplay the form
             return Page();
         }
-        //adding the methods to create the basket and customer
+
+        // Method to create a new basket for the user
         public void NewBasket()
         {
             Basket newBasket = new Basket();
@@ -174,32 +156,26 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
             _db.SaveChanges();
         }
 
-
-
+        // Method to create a new customer linked to a basket
         public void NewCustomer(string Email)
         {
             var newBasket = new Basket();
             _db.Baskets.Add(newBasket);
-            _db.SaveChanges(); // ✅ Ensure basket is saved first
+            _db.SaveChanges(); // Ensure basket is saved first
 
             var customer = new CheckoutCustomer
             {
                 Email = Email,
-                BasketID = newBasket.BasketID // ✅ Assign newly created BasketID
+                BasketID = newBasket.BasketID // Assign the newly created BasketID
             };
 
             _db.CheckoutCustomers.Add(customer);
-            _db.SaveChanges(); // ✅ Save customer with assigned basket
+            _db.SaveChanges(); // Save customer with assigned basket
 
             Console.WriteLine($"✅ New customer created: {customer.Email}, BasketID: {customer.BasketID}");
         }
 
-
-        
-
-
-
-
+        // Creates a new instance of the IdentityUser
         private IdentityUser CreateUser()
         {
             try
@@ -214,6 +190,7 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
             }
         }
 
+        // Retrieves the email store for the user
         private IUserEmailStore<IdentityUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)

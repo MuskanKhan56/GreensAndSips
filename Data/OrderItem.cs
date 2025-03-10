@@ -4,21 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreensAndSips.Models
 {
+    // Represents an item within an order
     public class OrderItem
     {
-        [Key] // ✅ This ensures OrderNo is part of the primary key
-        public int OrderNo { get; set; }
+        [Key] // ✅ Part of the composite primary key
+        public int OrderNo { get; set; } // Order number (linked to OrderHistory)
 
-        [Key] // ✅ This ensures StockID is also part of the composite primary key
-        public int StockID { get; set; }
+        [Key] // ✅ Part of the composite primary key
+        public int StockID { get; set; } // Food item identifier
 
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } // Number of units of this item in the order
 
         // ✅ Foreign Key Relationships
         [ForeignKey("OrderNo")]
-        public OrderHistory OrderHistory { get; set; }
+        public OrderHistory OrderHistory { get; set; } // Reference to the associated order
 
         [ForeignKey("StockID")]
-        public FoodItem FoodItem { get; set; }
+        public FoodItem FoodItem { get; set; } // Reference to the ordered food item
     }
 }

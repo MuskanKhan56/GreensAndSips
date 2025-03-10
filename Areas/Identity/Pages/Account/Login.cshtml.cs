@@ -16,6 +16,7 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
+        // Constructor to initialize dependencies
         public LoginModel(SignInManager<IdentityUser> signInManager,
                           UserManager<IdentityUser> userManager,
                           ILogger<LoginModel> logger)
@@ -26,29 +27,31 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } // Holds user input for login
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; } // Stores external authentication providers
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } // Stores the return URL after login
 
         [TempData]
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } // Stores error messages temporarily
 
+        // Model to capture user login details
         public class InputModel
         {
             [Required]
             [EmailAddress]
-            public string Email { get; set; }
+            public string Email { get; set; } // User email
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string Password { get; set; } // User password
 
             [Display(Name = "Remember me?")]
-            public bool RememberMe { get; set; }
+            public bool RememberMe { get; set; } // Remember me option
         }
 
+        // Handles GET request for login page
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
@@ -58,17 +61,21 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
+            // Sign out from any external authentication session
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
+            // Retrieve external authentication providers
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
         }
 
+        // Handles POST request for login submission
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
+            // Retrieve external authentication providers
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
@@ -80,6 +87,7 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
                     return Page();
                 }
 
+                // Attempt to sign in the user
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)

@@ -2,40 +2,41 @@
 @model GreensAndSips.Pages.IndexModel
 
 @{
-    ViewData["Title"] = "Welcome to Greens And Sips";
-    var inMemberRole = User.IsInRole("Member");
-    var inAdminRole = User.IsInRole("Admin");
+    ViewData["Title"] = "Welcome to Greens And Sips"; // Sets the page title
+    var inMemberRole = User.IsInRole("Member"); // Checks if user is a Member
+    var inAdminRole = User.IsInRole("Admin"); // Checks if user is an Admin
 }
 
-<!-- Welcome Text -->
+<!-- Welcome Section -->
 <div class="text-center my-4">
     <h1 class="fw-bold">Welcome to Greens And Sips</h1>
     <p class="lead">Discover delicious meals, fresh ingredients, and amazing offers just for you.</p>
+
+    <!-- Display user roles for debugging or conditional content -->
     <p>Is Admin: @inAdminRole</p>
     <p>Is Member: @inMemberRole</p>
-</div>
-
-
-<!-- Large Banner Image -->
-<div class="text-center my-4">
-    <img src="Image1.jpeg" class="img-fluid w-100" alt="Restaurant Banner" style="max-height: 500px; object-fit: cover;">
 </div>
 
 <!-- Special Offers Section -->
 <div class="container my-5">
     <div class="row d-flex justify-content-center">
+        <!-- Offer 1: Buy 1 Get 1 Free -->
         <div class="col-md-4">
             <div class="card text-center p-3">
                 <h4>Buy 1 Get 1 Free</h4>
                 <p>Available on all beverages this weekend!</p>
             </div>
         </div>
+
+        <!-- Offer 2: 20% Off on Salads -->
         <div class="col-md-4">
             <div class="card text-center p-3">
-                <h4>20% Off All salads</h4>
+                <h4>20% Off All Salads</h4>
                 <p>Enjoy a discount on selected light bites.</p>
             </div>
         </div>
+
+        <!-- Offer 3: Meal Combo Deal -->
         <div class="col-md-4">
             <div class="card text-center p-3">
                 <h4>Meal Combo for ₹9.99</h4>

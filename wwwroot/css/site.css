@@ -49,3 +49,87 @@ body {
     border-radius: 10px; /* Optional: Rounded corners */
     display: inline-block; /* Prevents full-width overlay */
 }
+/* Default button style */
+button, .btn {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    /* Change button color on click */
+    button:active, .btn:active {
+        background-color: green !important;
+        color: white !important;
+    }
+/* Navbar Styling */
+.navbar {
+    background-color: #2e8b57 !important; /* A rich green color */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: white !important;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+    .navbar-nav .nav-link:hover {
+        background-color: #1f6f43 !important; /* Slightly darker green on hover */
+        border-radius: 5px;
+    }
+
+/* Active page styling */
+.navbar-nav .nav-item .active {
+    background-color: #1f6f43 !important;
+    border-radius: 5px;
+}
+/* Offer Box Styling */
+/* Styling for the special offer boxes */
+.offer-box {
+    background: white; /* Clean white background */
+    border: 3px solid #228B22; /* Green border to match the theme */
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Spacing inside the box */
+    text-align: center; /* Center align content */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    /* Hover effect to make it interactive */
+    .offer-box:hover {
+        transform: translateY(-5px); /* Moves up slightly on hover */
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+    }
+
+    /* Offer Title Styling */
+    .offer-box h3 {
+        font-size: 22px;
+        color: #228B22; /* Dark green */
+    }
+
+    /* Offer Text Styling */
+    .offer-box p {
+        font-size: 16px;
+        color: black;
+    }
+
+/* Make all text bold and black */
+body {
+    color: black !important;
+    font-weight: bold !important;
+}
+
+/* Override specific elements if needed */
+h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
+    color: black !important;
+    font-weight: bold !important;
+}
+body {
+    background-color: red !important;
+}
+
+

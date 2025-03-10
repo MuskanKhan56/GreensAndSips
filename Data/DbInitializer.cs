@@ -5,15 +5,19 @@ namespace GreensAndSips.Data
 {
     public static class DbInitializer
     {
+        // Initializes the database with default data
         public static void Initialize(GreensAndSipsContext context)
         {
+            // Ensure the database is created before adding data
             context.Database.EnsureCreated();
 
+            // Check if any food items already exist in the database
             if (context.FoodItems.Any())
             {
-                return;
+                return; // Exit if data already exists
             }
 
+            // Define an array of FoodItem objects to seed the database
             var foodItems = new FoodItem[]
             {
                 new FoodItem { ItemName = "Shepherds Pie", ItemDesc = "Our tasty shepherds pie packed full of lean minced lamb and an assortment of vegetables", Available = true, Vegetarian = false, Price = 9.95M },
@@ -23,7 +27,10 @@ namespace GreensAndSips.Data
                 new FoodItem { ItemName = "Toad in the Hole", ItemDesc = "Ultimate toad-in-the-hole with caramelised onion gravy", Available = true, Vegetarian = false, Price = 7.50M }
             };
 
+            // Add the food items to the database
             context.FoodItems.AddRange(foodItems);
+
+            // Save changes to persist the data
             context.SaveChanges();
         }
     }

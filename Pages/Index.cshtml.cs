@@ -7,29 +7,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SQLitePCL;
 
 namespace GreensAndSips.Pages
 {
-   
-    
-    //[Authorize(Roles = "Admin, Member")]
+    // Handles the homepage logic for listing food items
     public class IndexModel : PageModel
     {
-        private readonly GreensAndSipsContext _context;
+        private readonly GreensAndSipsContext _context; // Database context
 
+        // Constructor to initialize the database context
         public IndexModel(GreensAndSipsContext context)
         {
             _context = context;
         }
-       
+
+        // Stores the list of food items to be displayed on the homepage
         public IList<FoodItem> FoodItem { get; set; } = new List<FoodItem>();
 
+        // Handles GET request to retrieve food items from the database
         public async Task OnGetAsync()
         {
-            if (_context.FoodItems != null)
+            if (_context.FoodItems != null) // Check if the FoodItems table exists
             {
-                FoodItem = await _context.FoodItems.ToListAsync();
+                FoodItem = await _context.FoodItems.ToListAsync(); // Retrieve all food items
             }
         }
     }

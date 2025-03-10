@@ -2,10 +2,12 @@
 @model GreensAndSips.Pages.Menu.IndexModel
 
 @{
-    ViewData["Title"] = "Menu";
+    ViewData["Title"] = "Menu"; // ✅ Sets the page title
 }
 
 <h1>@ViewData["Title"]</h1>
+
+<!-- ✅ Show "Create New" button only for Admin users -->
 @if (User.IsInRole("Admin"))
 {
     <p>
@@ -13,7 +15,7 @@
     </p>
 }
 
-
+<!-- ✅ Table displaying the food menu -->
 <table class="table">
     <thead>
         <tr>
@@ -23,15 +25,14 @@
             <th>@Html.DisplayNameFor(model => model.FoodItem[0].Available)</th>
             <th>@Html.DisplayNameFor(model => model.FoodItem[0].Vegetarian)</th>
             <th>@Html.DisplayNameFor(model => model.FoodItem[0].Price)</th>
-            <th>Stock</th>
-
-            
+            <th>Stock</th> <!-- ✅ Added stock column -->
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.FoodItem)
+        @foreach (var item in Model.FoodItem) // ✅ Loop through food items
         {
             <tr>
+                <!-- ✅ Display food item image if available -->
                 <td>
                     @if (item.ImageData != null)
                     {
@@ -47,8 +48,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Available)</td>
                 <td>@Html.DisplayFor(modelItem => item.Vegetarian)</td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@item.Stock</td>
-
+                 <!-- ✅ Display stock quantity -->
+                <!-- ✅ Button to add item to basket -->
                 <td>
                     <form method="post">
                         <button type="submit" asp-page-handler="Buy" asp-route-itemID="@item.ID" class="btn btn-primary">
@@ -56,6 +57,8 @@
                         </button>
                     </form>
                 </td>
+
+                <!-- ✅ Edit and Delete options visible only for Admin users -->
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
@@ -63,8 +66,7 @@
                         <a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm">Delete</a>
                     }
                 </td>
-
             </tr>
         }
     </tbody>
-</table> . 
+</table>

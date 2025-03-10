@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Register database context
+// Register database context
 builder.Services.AddDbContext<GreensAndSipsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GreensAndSipsContext")));
 
-// ✅ Register Identity services (ONLY ONCE!)
+// Register Identity services (ONLY ONCE!)
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Stores.MaxLengthForKeys = 128;
@@ -18,19 +18,19 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddDefaultUI()
 .AddDefaultTokenProviders();
 
-// ✅ FIX: Ensure login, logout, and access denied paths are configured
+//  Ensure login, logout, and access denied paths are configured
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";  // ✅ Correct login path
+    options.LoginPath = "/Identity/Account/Login";  // Correct login path
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
-// ✅ FIX: Protect Checkout page (Only accessible to logged-in users)
+//  Protect Checkout page (Only accessible to logged-in users)
 builder.Services.AddRazorPages()
     .AddRazorPagesOptions(options =>
     {
-        options.Conventions.AuthorizeFolder("/Checkout"); // 🔹 Protects Checkout Page
+        options.Conventions.AuthorizeFolder("/Checkout"); //  Protects Checkout Page
     });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -48,7 +48,7 @@ else
     app.UseMigrationsEndPoint();
 }
 
-// ✅ Ensure the database is properly initialized
+//  Ensure the database is properly initialized
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -56,7 +56,7 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    context.Database.Migrate(); // ✅ Ensures migrations are applied
+    context.Database.Migrate(); //  Ensures migrations are applied
     await IdentitySeedData.Initialize(context, userManager, roleManager);
 }
 

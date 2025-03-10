@@ -1,17 +1,19 @@
 ﻿@page
 @model GreensAndSips.Pages.Admin.IndexModel
 @{
-    ViewData["Title"] = "Admin - Food Items";
+    ViewData["Title"] = "Admin - Food Items"; //  Sets the page title
 }
 
 <h1>Admin Dashboard - Manage Food Items</h1>
 
-@if (Model.FoodItems != null && Model.FoodItems.Any())
+@if (Model.FoodItems != null && Model.FoodItems.Any()) //  Check if there are food items in the database
 {
+    <!-- Navigation link to Stock Control page -->
     <li class="nav-item">
         <a class="nav-link" asp-page="/Admin/StockControl">Stock Control</a>
     </li>
 
+    <!-- Table to display food items -->
     <table class="table">
         <thead>
             <tr>
@@ -23,13 +25,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.FoodItems)
+            @foreach (var item in Model.FoodItems) //  Loop through food items and display them
             {
                 <tr>
                     <td>@item.ItemName</td>
                     <td>@item.ItemDesc</td>
                     <td>@item.Price</td>
-                    <td>@(item.Available ? "Yes" : "No")</td>
+                    <td>@(item.Available ? "Yes" : "No")</td> <!-- ✅ Convert boolean values to readable text -->
                     <td>@(item.Vegetarian ? "Yes" : "No")</td>
                 </tr>
             }
@@ -39,4 +41,5 @@
 else
 {
     <p>No food items found.</p>
+    // Display message if there are no food items
 }

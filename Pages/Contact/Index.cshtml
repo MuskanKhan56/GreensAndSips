@@ -2,7 +2,7 @@
 @model GreensAndSips.Pages.Contact.IndexModel
 
 @{
-    ViewData["Title"] = "Contact Us";
+    ViewData["Title"] = "Contact Us"; // ✅ Sets the page title
 }
 
 <h2>Contact Us</h2>
@@ -13,28 +13,34 @@
     <div class="alert alert-success">@TempData["Message"]</div>
 }
 
+<!-- ✅ Contact form -->
 <form method="post">
+    <!-- Name input field -->
     <div class="form-group">
         <label asp-for="ContactForm.Name"></label>
         <input asp-for="ContactForm.Name" class="form-control" required />
-        <span asp-validation-for="ContactForm.Name" class="text-danger"></span>
+        <span asp-validation-for="ContactForm.Name" class="text-danger"></span> <!-- ✅ Validation message -->
     </div>
 
+    <!-- Email input field -->
     <div class="form-group">
         <label asp-for="ContactForm.Email"></label>
         <input asp-for="ContactForm.Email" class="form-control" type="email" required />
-        <span asp-validation-for="ContactForm.Email" class="text-danger"></span>
+        <span asp-validation-for="ContactForm.Email" class="text-danger"></span> <!-- ✅ Validation message -->
     </div>
 
+    <!-- Message input field -->
     <div class="form-group">
         <label asp-for="ContactForm.Message"></label>
         <textarea asp-for="ContactForm.Message" class="form-control" rows="4" required></textarea>
-        <span asp-validation-for="ContactForm.Message" class="text-danger"></span>
+        <span asp-validation-for="ContactForm.Message" class="text-danger"></span> <!-- ✅ Validation message -->
     </div>
 
+    <!-- Submit button -->
     <button type="submit" class="btn btn-primary">Send Message</button>
 </form>
 
+<!-- ✅ Include validation scripts -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

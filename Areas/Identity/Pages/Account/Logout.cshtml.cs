@@ -11,16 +11,21 @@ namespace GreensAndSips.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
+        // Constructor to initialize dependencies
         public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
         }
 
+        // Handles logout request
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            // Sign out the user
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+
+            // Redirect to the specified return URL or reload the current page
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
