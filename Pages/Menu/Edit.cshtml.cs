@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GreensAndSips.Data;
 using GreensAndSips.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GreensAndSips.Pages.Menu
 {
+    [Authorize(Roles = "Admin")]
     public class EditModel : PageModel
     {
         private readonly GreensAndSips.Data.GreensAndSipsContext _context;
@@ -39,8 +41,7 @@ namespace GreensAndSips.Pages.Menu
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
+      
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

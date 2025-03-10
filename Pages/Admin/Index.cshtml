@@ -1,0 +1,42 @@
+﻿@page
+@model GreensAndSips.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Admin - Food Items";
+}
+
+<h1>Admin Dashboard - Manage Food Items</h1>
+
+@if (Model.FoodItems != null && Model.FoodItems.Any())
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Admin/StockControl">Stock Control</a>
+    </li>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Vegetarian</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FoodItems)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.ItemDesc</td>
+                    <td>@item.Price</td>
+                    <td>@(item.Available ? "Yes" : "No")</td>
+                    <td>@(item.Vegetarian ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No food items found.</p>
+}

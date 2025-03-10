@@ -8,18 +8,26 @@ namespace GreensAndSips.Models
         [Key]
         public int ID { get; set; }
 
+        [Required]
         [StringLength(30)]
-        public string Item_name { get; set; }
+        public string ItemName { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(255)]
+        public string ItemDesc { get; set; } = string.Empty;
+
+        public bool Available { get; set; } = true;
+
+        public bool Vegetarian { get; set; } = false;
+
+        [Required]
+        [Column(TypeName = "Money")]
+        public decimal Price { get; set; } = 0M;
 
         [StringLength(255)]
-        public string Item_desc { get; set; }
-
-        public bool? Available { get; set; }
-
-        public bool? Vegetarian { get; set; }
-
-        [DataType(DataType.Currency)]
-        [Column(TypeName = "Money")]                    
-        public decimal? Price { get; set; }
+        public string ImageDescription { get; set; }
+        public byte[] ImageData { get; set; }
+        [Required]
+        public int Stock { get; set; }
     }
 }

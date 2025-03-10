@@ -1,0 +1,61 @@
+﻿@page
+@model GreensAndSips.Pages.Admin.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>FoodItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FoodItem.ID" />
+            <div class="form-group">
+                <label asp-for="FoodItem.ItemName" class="control-label"></label>
+                <input asp-for="FoodItem.ItemName" class="form-control" />
+                <span asp-validation-for="FoodItem.ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FoodItem.ItemDesc" class="control-label"></label>
+                <input asp-for="FoodItem.ItemDesc" class="form-control" />
+                <span asp-validation-for="FoodItem.ItemDesc" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="FoodItem.Available" /> @Html.DisplayNameFor(model => model.FoodItem.Available)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="FoodItem.Vegetarian" /> @Html.DisplayNameFor(model => model.FoodItem.Vegetarian)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="FoodItem.Price" class="control-label"></label>
+                <input asp-for="FoodItem.Price" class="form-control" />
+                <span asp-validation-for="FoodItem.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FoodItem.ImageData" class="control-label"></label>
+                <input asp-for="FoodItem.ImageData" class="form-control" />
+                <span asp-validation-for="FoodItem.ImageData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

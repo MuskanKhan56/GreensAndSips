@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using GreensAndSips.Data;
 using GreensAndSips.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GreensAndSips.Pages.Menu
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
-        private readonly GreensAndSips.Data.GreensAndSipsContext _context;
+        private readonly GreensAndSipsContext _context;
 
-        public CreateModel(GreensAndSips.Data.GreensAndSipsContext context)
+        public CreateModel(GreensAndSipsContext context)
         {
             _context = context;
         }
@@ -25,19 +26,48 @@ namespace GreensAndSips.Pages.Menu
         }
 
         [BindProperty]
-        public FoodItem FoodItem { get; set; } = default!;
-        
+        public FoodItem FoodItem { get; set; } = new FoodItem();
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        [BindProperty]
+        public IFormFile ImageFile { get; set; }  // ✅ Add this
+
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.FoodItems == null || FoodItem == null)
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
+            foreach(var file in Request.Form.Files)
+            {
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                FoodItem.ImageData = ms.ToArray();
+                ms.Close();
+                ms.Dispose();
+            }
 
-            _context.FoodItems.Add(FoodItem);
-            await _context.SaveChangesAsync();
+            // ✅ Handle Image Upload
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await ImageFile.CopyToAsync(memoryStream);
+                    FoodItem.ImageData = memoryStream.ToArray();  // ✅ Convert image to binary
+                }
+            }
+
+            try
+            {
+                _context.FoodItems.Add(FoodItem);
+                await _context.SaveChangesAsync();
+                Console.WriteLine($" Successfully added FoodItem: {FoodItem.ItemName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($" Error saving data: {ex.Message}");
+                ModelState.AddModelError("", "An error occurred while saving the food item.");
+                return Page();
+            }
 
             return RedirectToPage("./Index");
         }

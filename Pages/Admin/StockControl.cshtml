@@ -1,0 +1,35 @@
+﻿@page
+@model GreensAndSips.Pages.Admin.StockControlModel
+
+@{
+    ViewData["Title"] = "Stock Control";
+}
+
+<h1>Stock Control</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Current Stock</th>
+            <th>Update Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.FoodItems)
+        {
+            <tr>
+                <td>@item.ItemName</td>
+                <td>@item.Stock</td>
+                <td>
+                    <form method="post">
+                        <input type="hidden" name="itemID" value="@item.ID" />
+                        <input type="number" name="UpdatedStock" class="form-control" value="@item.Stock" min="0" required />
+                        <button type="submit" asp-page-handler="UpdateStock" class="btn btn-primary mt-2">Update</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

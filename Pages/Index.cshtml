@@ -1,9 +1,46 @@
 ﻿@page
 @model GreensAndSips.Pages.IndexModel
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Greens And Sips";
+    var inMemberRole = User.IsInRole("Member");
+    var inAdminRole = User.IsInRole("Admin");
 }
-<div class="text-center">
-<h1>Welcome to Greens and Sips!</h1>
-<p>This is the restaurant homepage</p>
+
+<!-- Welcome Text -->
+<div class="text-center my-4">
+    <h1 class="fw-bold">Welcome to Greens And Sips</h1>
+    <p class="lead">Discover delicious meals, fresh ingredients, and amazing offers just for you.</p>
+    <p>Is Admin: @inAdminRole</p>
+    <p>Is Member: @inMemberRole</p>
+</div>
+
+
+<!-- Large Banner Image -->
+<div class="text-center my-4">
+    <img src="Image1.jpeg" class="img-fluid w-100" alt="Restaurant Banner" style="max-height: 500px; object-fit: cover;">
+</div>
+
+<!-- Special Offers Section -->
+<div class="container my-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h4>Buy 1 Get 1 Free</h4>
+                <p>Available on all beverages this weekend!</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h4>20% Off All salads</h4>
+                <p>Enjoy a discount on selected light bites.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h4>Meal Combo for ₹9.99</h4>
+                <p>A delicious combination of your favorite main dishes.</p>
+            </div>
+        </div>
+    </div>
 </div>

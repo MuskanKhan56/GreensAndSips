@@ -2,59 +2,69 @@
 @model GreensAndSips.Pages.Menu.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Menu";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-page="Create" class="btn btn-success">Create New</a>
+    </p>
+}
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem[0].Item_name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem[0].Item_desc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem[0].Available)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem[0].Vegetarian)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FoodItem[0].Price)
-            </th>
-            <th></th>
+            <th>Image</th> <!-- ✅ New column for images -->
+            <th>@Html.DisplayNameFor(model => model.FoodItem[0].ItemName)</th>
+            <th>@Html.DisplayNameFor(model => model.FoodItem[0].ItemDesc)</th>
+            <th>@Html.DisplayNameFor(model => model.FoodItem[0].Available)</th>
+            <th>@Html.DisplayNameFor(model => model.FoodItem[0].Vegetarian)</th>
+            <th>@Html.DisplayNameFor(model => model.FoodItem[0].Price)</th>
+            <th>Stock</th>
+
+            
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.FoodItem) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item_desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Available)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vegetarian)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.FoodItem)
+        {
+            <tr>
+                <td>
+                    @if (item.ImageData != null)
+                    {
+                        <img src="data:image;base64,@Convert.ToBase64String(item.ImageData)" width="100" height="100" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ItemDesc)</td>
+                <td>@Html.DisplayFor(modelItem => item.Available)</td>
+                <td>@Html.DisplayFor(modelItem => item.Vegetarian)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@item.Stock</td>
+
+                <td>
+                    <form method="post">
+                        <button type="submit" asp-page-handler="Buy" asp-route-itemID="@item.ID" class="btn btn-primary">
+                            Add To Basket
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm">Delete</a>
+                    }
+                </td>
+
+            </tr>
+        }
     </tbody>
-</table>
+</table> . 

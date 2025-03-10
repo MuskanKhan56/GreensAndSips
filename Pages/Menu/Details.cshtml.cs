@@ -35,7 +35,7 @@ namespace GreensAndSips.Pages.Menu
             }
             else 
             {
-                FoodItem = fooditem;
+                FoodItem= fooditem;
             }
             return Page();
         }
